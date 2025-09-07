@@ -49,17 +49,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     checkAuthStatus();
   }, []);
-
   const checkAuthStatus = async () => {
     try {
       const token = Cookies.get('auth_token');
       if (token) {
-        const userData = await authService.getCurrentUser();
-        setUser(userData);
+        try {
+          const userData = await authService.getCurrentUser();
+          setUser(userData);
+        } catch (error: any) {
+          // If error is 401, try to refresh the token
+          if (error.response && error.response.status === 401) {
+            const refreshSuccess = await refreshAccessToken();
+            if (refreshSuccess) {
+              // Try getting user data again with new token
+              const userData = await authService.getCurrentUser();
+              setUser(userData);
+            }
+          } else {
+            throw error;
+          }
+        }
       }
     } catch (error) {
       console.error('Auth check failed:', error);
       Cookies.remove('auth_token');
+      Cookies.remove('refresh_token');
     } finally {
       setLoading(false);
     }
@@ -69,10 +83,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setLoading(true);
       const response = await authService.login(email, password);
-      console.log("🚀 ~ login ~ response:", response)
 
       if (response.accessToken) {
         Cookies.set('auth_token', response.accessToken, { expires: response.expiresIn || 7 });
+        Cookies.set('refresh_token', response.refreshToken, { expires: 30 }); // Longer expiry for refresh token
+
         // Fetch user data from /api/profile
         const userData = await authService.getCurrentUser();
         setUser(userData);
@@ -86,6 +101,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return false;
     } finally {
       setLoading(false);
+    }
+  };
+
+  const refreshAccessToken = async (): Promise<boolean> => {
+    try {
+      const refreshToken = Cookies.get('refresh_token');
+      if (!refreshToken) return false;
+
+      const response = await authService.refreshToken(refreshToken);
+
+      if (response.accessToken) {
+        Cookies.set('auth_token', response.accessToken, { expires: response.expiresIn ? response.expiresIn / 86400 : 1 });
+        Cookies.set('refresh_token', response.refreshToken, { expires: 30 });
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.error('Token refresh failed:', error);
+      // If refresh fails, log the user out
+      logout();
+      return false;
     }
   };
 
@@ -112,6 +149,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     Cookies.remove('auth_token');
+    Cookies.remove('refresh_token');
     setUser(null);
     router.push('/login');
     toast.success('Logged out successfully');
