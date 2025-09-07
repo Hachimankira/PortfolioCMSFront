@@ -14,7 +14,7 @@ interface LoginForm {
 export default function LoginPage() {
   const { login, loading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const {
     register,
     handleSubmit,
@@ -39,7 +39,7 @@ export default function LoginPage() {
             </Link>
           </p>
         </div>
-        
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
             <div>
@@ -95,6 +95,12 @@ export default function LoginPage() {
                 </button>
               </div>
               {errors.password && <p className="form-error">{errors.password.message}</p>}
+            </div>
+
+            <div className="mt-2 text-center">
+              <Link href="/forgot-password" className="text-sm text-primary-600 hover:underline">
+                Forgot your password?
+              </Link>
             </div>
           </div>
 
