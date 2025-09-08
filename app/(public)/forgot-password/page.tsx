@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
-import { authService } from '../../lib/services/auth.service';
+import { authService } from '../../../lib/services/auth.service';
 import Link from 'next/link';
 
 export default function ForgotPassword() {

@@ -8,7 +8,9 @@
     "start": "next start"
   },
   "dependencies": {
+    "@radix-ui/react-tabs": "^1.1.13",
     "axios": "^1.11.0",
+    "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.542.0",
@@ -16,7 +18,8 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.62.0",
-    "react-hot-toast": "^2.6.0"
+    "react-hot-toast": "^2.6.0",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.13",
