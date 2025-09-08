@@ -28,7 +28,7 @@ export default function DocumentationPage() {
           <div className="bg-gray-100 p-4 rounded-md">
             <div className="flex items-center justify-between">
               <span className="font-mono text-sm">X-API-Key: your_api_key_here</span>
-              <CopyButton textToCopy="X-API-Key: IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI=" />
+              <CopyButton textToCopy="X-API-Key: {api-key}=" />
             </div>
           </div>
         </div>
@@ -80,9 +80,9 @@ export default function DocumentationPage() {
                     <pre>{`curl -X 'GET' \\
   'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/projects' \\
   -H 'accept: */*' \\
-  -H 'X-API-Key: IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='`}</pre>
+  -H 'X-API-Key: {api-key}='`}</pre>
                     <CopyButton 
-                      textToCopy={`curl -X 'GET' \\\n  'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/projects' \\\n  -H 'accept: */*' \\\n  -H 'X-API-Key: IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='`}
+                      textToCopy={`curl -X 'GET' \\\n  'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/projects' \\\n  -H 'accept: */*' \\\n  -H 'X-API-Key: {api-key}='`}
                       className="text-white bg-gray-700 hover:bg-gray-600" 
                     />
                   </div>
@@ -133,9 +133,9 @@ export default function DocumentationPage() {
                     <pre>{`curl -X 'GET' \\
   'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/skills' \\
   -H 'accept: */*' \\
-  -H 'X-API-Key: IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='`}</pre>
+  -H 'X-API-Key: {api-key}='`}</pre>
                     <CopyButton 
-                      textToCopy={`curl -X 'GET' \\\n  'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/skills' \\\n  -H 'accept: */*' \\\n  -H 'X-API-Key: IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='`}
+                      textToCopy={`curl -X 'GET' \\\n  'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/skills' \\\n  -H 'accept: */*' \\\n  -H 'X-API-Key: {api-key}='`}
                       className="text-white bg-gray-700 hover:bg-gray-600" 
                     />
                   </div>
@@ -160,9 +160,9 @@ export default function DocumentationPage() {
                     <pre>{`curl -X 'GET' \\
   'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/profile' \\
   -H 'accept: */*' \\
-  -H 'X-API-Key: IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='`}</pre>
+  -H 'X-API-Key: {api-key}='`}</pre>
                     <CopyButton 
-                      textToCopy={`curl -X 'GET' \\\n  'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/profile' \\\n  -H 'accept: */*' \\\n  -H 'X-API-Key: IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='`}
+                      textToCopy={`curl -X 'GET' \\\n  'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/profile' \\\n  -H 'accept: */*' \\\n  -H 'X-API-Key: {api-key}='`}
                       className="text-white bg-gray-700 hover:bg-gray-600" 
                     />
                   </div>
@@ -187,9 +187,9 @@ export default function DocumentationPage() {
                     <pre>{`curl -X 'GET' \\
   'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/experiences' \\
   -H 'accept: */*' \\
-  -H 'X-API-Key: IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='`}</pre>
+  -H 'X-API-Key: {api-key}='`}</pre>
                     <CopyButton 
-                      textToCopy={`curl -X 'GET' \\\n  'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/experiences' \\\n  -H 'accept: */*' \\\n  -H 'X-API-Key: IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='`}
+                      textToCopy={`curl -X 'GET' \\\n  'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/experiences' \\\n  -H 'accept: */*' \\\n  -H 'X-API-Key: {api-key}='`}
                       className="text-white bg-gray-700 hover:bg-gray-600" 
                     />
                   </div>
@@ -214,9 +214,9 @@ export default function DocumentationPage() {
                     <pre>{`curl -X 'GET' \\
   'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/education' \\
   -H 'accept: */*' \\
-  -H 'X-API-Key: IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='`}</pre>
+  -H 'X-API-Key: {api-key}='`}</pre>
                     <CopyButton 
-                      textToCopy={`curl -X 'GET' \\\n  'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/education' \\\n  -H 'accept: */*' \\\n  -H 'X-API-Key: IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='`}
+                      textToCopy={`curl -X 'GET' \\\n  'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/education' \\\n  -H 'accept: */*' \\\n  -H 'X-API-Key: {api-key}='`}
                       className="text-white bg-gray-700 hover:bg-gray-600" 
                     />
                   </div>
@@ -241,9 +241,9 @@ export default function DocumentationPage() {
                     <pre>{`curl -X 'GET' \\
   'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/certifications' \\
   -H 'accept: */*' \\
-  -H 'X-API-Key: IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='`}</pre>
+  -H 'X-API-Key: {api-key}='`}</pre>
                     <CopyButton 
-                      textToCopy={`curl -X 'GET' \\\n  'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/certifications' \\\n  -H 'accept: */*' \\\n  -H 'X-API-Key: IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='`}
+                      textToCopy={`curl -X 'GET' \\\n  'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/certifications' \\\n  -H 'accept: */*' \\\n  -H 'X-API-Key: {api-key}='`}
                       className="text-white bg-gray-700 hover:bg-gray-600" 
                     />
                   </div>
@@ -268,9 +268,9 @@ export default function DocumentationPage() {
                     <pre>{`curl -X 'GET' \\
   'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/testimonials' \\
   -H 'accept: */*' \\
-  -H 'X-API-Key: IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='`}</pre>
+  -H 'X-API-Key: {api-key}='`}</pre>
                     <CopyButton 
-                      textToCopy={`curl -X 'GET' \\\n  'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/testimonials' \\\n  -H 'accept: */*' \\\n  -H 'X-API-Key: IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='`}
+                      textToCopy={`curl -X 'GET' \\\n  'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/testimonials' \\\n  -H 'accept: */*' \\\n  -H 'X-API-Key: {api-key}='`}
                       className="text-white bg-gray-700 hover:bg-gray-600" 
                     />
                   </div>
@@ -295,9 +295,9 @@ export default function DocumentationPage() {
                     <pre>{`curl -X 'GET' \\
   'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/sociallinks' \\
   -H 'accept: */*' \\
-  -H 'X-API-Key: IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='`}</pre>
+  -H 'X-API-Key: {api-key}='`}</pre>
                     <CopyButton 
-                      textToCopy={`curl -X 'GET' \\\n  'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/sociallinks' \\\n  -H 'accept: */*' \\\n  -H 'X-API-Key: IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='`}
+                      textToCopy={`curl -X 'GET' \\\n  'https://portfoliocms-3pl6.onrender.com/public/t%40t.com/sociallinks' \\\n  -H 'accept: */*' \\\n  -H 'X-API-Key: {api-key}='`}
                       className="text-white bg-gray-700 hover:bg-gray-600" 
                     />
                   </div>
@@ -328,7 +328,7 @@ const fetchProjects = async (email) => {
         method: 'GET',
         headers: {
           'accept': '*/*',
-          'X-API-Key': 'IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='
+          'X-API-Key': '{api-key}='
         }
       }
     );
@@ -358,7 +358,7 @@ const fetchProjects = async (email) => {
         method: 'GET',
         headers: {
           'accept': '*/*',
-          'X-API-Key': 'IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='
+          'X-API-Key': '{api-key}='
         }
       }
     );
@@ -404,7 +404,7 @@ function ProjectsList() {
             method: 'GET',
             headers: {
               'accept': '*/*',
-              'X-API-Key': 'IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='
+              'X-API-Key': '{api-key}='
             }
           }
         );
@@ -473,7 +473,7 @@ function ProjectsList() {
             method: 'GET',
             headers: {
               'accept': '*/*',
-              'X-API-Key': 'IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI='
+              'X-API-Key': '{api-key}='
             }
           }
         );
@@ -550,7 +550,7 @@ def fetch_portfolio_data(email, resource_type):
     
     headers = {
         "accept": "*/*",
-        "X-API-Key": "IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI="
+        "X-API-Key": "{api-key}="
     }
     
     try:
@@ -588,7 +588,7 @@ def fetch_portfolio_data(email, resource_type):
     
     headers = {
         "accept": "*/*",
-        "X-API-Key": "IR9n6CHJceJ6sDDGL5Lk6FYc/l9nuEf44ZYbDLnsUtI="
+        "X-API-Key": "{api-key}="
     }
     
     try:
