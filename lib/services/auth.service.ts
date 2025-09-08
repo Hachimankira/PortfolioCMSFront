@@ -13,6 +13,7 @@ export interface RegisterRequest {
 
 export interface AuthResponse {
   accessToken: any;
+  refreshToken: string;
   expiresIn?: number;
   user: {
     id: string;
@@ -28,10 +29,10 @@ export const authService = {
   },
 
   async register(email: string, password: string, confirmPassword: string): Promise<AuthResponse> {
-    const response = await apiClient.post('/register', { 
-      email, 
-      password, 
-      confirmPassword 
+    const response = await apiClient.post('/register', {
+      email,
+      password,
+      confirmPassword
     });
     return response.data;
   },
@@ -43,5 +44,24 @@ export const authService = {
 
   async logout(): Promise<void> {
     await apiClient.post('/logout');
+  },
+
+  async refreshToken(refreshToken: string): Promise<AuthResponse> {
+    const response = await apiClient.post('/refresh-token', { refreshToken });
+    return response.data;
+  },
+
+  async requestPasswordReset(email: string): Promise<{ success: boolean; message: string }> {
+    const response = await apiClient.post('/forgotpassword', { email });
+    return response.data;
+  },
+
+  async resetPassword(email: string, resetCode: string, newPassword: string): Promise<{ success: boolean; message: string }> {
+    const response = await apiClient.post('/reset-password', {
+      email,
+      resetCode,
+      newPassword
+    });
+    return response.data;
   },
 };

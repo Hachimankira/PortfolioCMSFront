@@ -28,7 +28,7 @@ const navigation = [
     { name: 'Experience', href: '/experience', icon: Briefcase },
     { name: 'Projects', href: '/projects', icon: FolderOpen },
     { name: 'Skills', href: '/skills', icon: Settings },
-    { name: 'Social Links', href: '/social-links', icon: Share2 },
+    { name: 'Social Links', href: '/links', icon: Share2 },
     { name: 'Testimonials', href: '/testimonials', icon: MessageSquare },
 ];
 
