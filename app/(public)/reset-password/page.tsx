@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-hot-toast';
-import { authService } from '../../lib/services/auth.service';
+import { authService } from '../../../lib/services/auth.service';
 import Link from 'next/link';
 
 function ResetPasswordForm() {
