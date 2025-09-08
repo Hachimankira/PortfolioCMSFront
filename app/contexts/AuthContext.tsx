@@ -97,7 +97,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return false;
     } catch (error: any) {
-      toast.error(error.message || 'Login failed');
+      // toast.error(error.message || 'Login failed');
       return false;
     } finally {
       setLoading(false);

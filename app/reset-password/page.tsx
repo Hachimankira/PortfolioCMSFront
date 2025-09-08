@@ -1,20 +1,28 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { authService } from '../../lib/services/auth.service';
 import Link from 'next/link';
 
-export default function ResetPassword() {
+function ResetPasswordForm() {
   const searchParams = useSearchParams();
-  const [email, setEmail] = useState(searchParams.get('email') || '');
-  const [resetCode, setResetCode] = useState(searchParams.get('code') || '');
+  const [email, setEmail] = useState('');
+  const [resetCode, setResetCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [resetComplete, setResetComplete] = useState(false);
   const router = useRouter();
+
+  // Initialize form values from URL parameters
+  useEffect(() => {
+    if (searchParams) {
+      setEmail(searchParams.get('email') || '');
+      setResetCode(searchParams.get('code') || '');
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -134,5 +142,25 @@ export default function ResetPassword() {
         )}
       </div>
     </div>
+  );
+}
+
+// Loading component for the Suspense fallback
+function LoadingState() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
+        <p className="mt-4 text-gray-600">Loading...</p>
+      </div>
+    </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
