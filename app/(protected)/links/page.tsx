@@ -75,6 +75,7 @@ export default function LinksPage() {
       );
       setEditingLink(null);
       setShowForm(false);
+      setErrors(null);
       toast.success('Link updated successfully');
     } catch (error: any) {
       toast.error(error.message || 'Failed to update link');
@@ -101,6 +102,7 @@ export default function LinksPage() {
   const handleCancelForm = () => {
     setShowForm(false);
     setEditingLink(null);
+    setErrors(null);
   };
 
   const filteredLinks = links.filter(link =>

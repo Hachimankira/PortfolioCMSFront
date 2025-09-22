@@ -17,6 +17,7 @@ export default function TestimonialsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [approvalFilter, setApprovalFilter] = useState<'all' | 'approved' | 'pending'>('all');
   const [featuredFilter, setFeaturedFilter] = useState<'all' | 'featured'>('all');
+  const [serverErrors, setServerErrors] = useState<Record<string, string[]> | null>(null);
 
   useEffect(() => {
     fetchTestimonials();
@@ -42,11 +43,14 @@ export default function TestimonialsPage() {
       if (!('id' in data)) {
         const newTestimonial = await testimonialService.create(data as CreateTestimonialDto);
         setTestimonials(prev => [...prev, newTestimonial].sort((a, b) => a.displayOrder - b.displayOrder));
+        setServerErrors(null);
         setShowForm(false);
         toast.success('Testimonial added successfully');
       }
     } catch (error: any) {
-      toast.error(error.message || 'Failed to add testimonial');
+      const apiMessage = error?.response?.data?.title;
+      setServerErrors(error?.response?.data.errors)
+      toast.error(apiMessage || 'Failed to add testimonial');
     } finally {
       setSubmitting(false);
     }
@@ -54,21 +58,16 @@ export default function TestimonialsPage() {
 
   const handleUpdate = async (data: UpdateTestimonialDto | CreateTestimonialDto) => {
     if (!editingTestimonial) return;
-    
+
     try {
       setSubmitting(true);
       // Ensure we have an ID for the update
       const updateData = {
         ...data,
-        id: editingTestimonial.id
       } as UpdateTestimonialDto;
-      
-      const updatedTestimonial = await testimonialService.update(editingTestimonial.id, updateData);
-      setTestimonials(prev => 
-        prev.map(testimonial => 
-          testimonial.id === editingTestimonial.id ? updatedTestimonial : testimonial
-        ).sort((a, b) => a.displayOrder - b.displayOrder)
-      );
+
+      await testimonialService.update(editingTestimonial.id, updateData);
+      await fetchTestimonials();
       setEditingTestimonial(null);
       setShowForm(false);
       toast.success('Testimonial updated successfully');
@@ -95,26 +94,27 @@ export default function TestimonialsPage() {
   };
 
   const handleCancelForm = () => {
+    setServerErrors(null);
     setShowForm(false);
     setEditingTestimonial(null);
   };
 
   const filteredTestimonials = testimonials.filter(testimonial => {
-    const matchesSearch = 
-      testimonial.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      testimonial.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch =
+      (testimonial.content && testimonial.content.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (testimonial.clientName && testimonial.clientName.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (testimonial.clientTitle && testimonial.clientTitle.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (testimonial.clientCompany && testimonial.clientCompany.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    const matchesApproval = 
-      approvalFilter === 'all' || 
+
+    const matchesApproval =
+      approvalFilter === 'all' ||
       (approvalFilter === 'approved' && testimonial.isApproved) ||
       (approvalFilter === 'pending' && !testimonial.isApproved);
-    
+
     const matchesFeatured =
       featuredFilter === 'all' ||
       (featuredFilter === 'featured' && testimonial.isFeatured);
-    
+
     return matchesSearch && matchesApproval && matchesFeatured;
   });
 
@@ -123,8 +123,8 @@ export default function TestimonialsPage() {
   const approvedCount = testimonials.filter(t => t.isApproved).length;
   const featuredCount = testimonials.filter(t => t.isFeatured).length;
   const pendingCount = testimonials.filter(t => !t.isApproved).length;
-  
-  const avgRating = testimonials.length > 0 
+
+  const avgRating = testimonials.length > 0
     ? (testimonials.reduce((sum, t) => sum + (t.rating || 0), 0) / testimonials.length).toFixed(1)
     : '0.0';
 
@@ -137,18 +137,19 @@ export default function TestimonialsPage() {
             {editingTestimonial ? 'Edit Testimonial' : 'Add New Testimonial'}
           </h1>
           <p className="mt-1 text-gray-600">
-            {editingTestimonial 
-              ? 'Update testimonial details' 
+            {editingTestimonial
+              ? 'Update testimonial details'
               : 'Add a new client testimonial to your portfolio'
             }
           </p>
         </div>
-        
+
         <TestimonialForm
           testimonial={editingTestimonial || undefined}
           onSubmit={editingTestimonial ? handleUpdate : handleCreate}
           onCancel={handleCancelForm}
           loading={submitting}
+          serverErrors={serverErrors}
         />
       </div>
     );
@@ -225,7 +226,7 @@ export default function TestimonialsPage() {
               className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
-          
+
           <div className="relative w-full sm:w-48">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <CheckCircle className="h-5 w-5 text-gray-400" />
@@ -240,7 +241,7 @@ export default function TestimonialsPage() {
               <option value="pending">Pending</option>
             </select>
           </div>
-          
+
           <div className="relative w-full sm:w-48">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Medal className="h-5 w-5 text-gray-400" />
