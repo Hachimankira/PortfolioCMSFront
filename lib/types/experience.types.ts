@@ -20,28 +20,6 @@ export interface Experience {
   displayOrder: number;
 }
 
-export interface CreateExperienceDto {
-  company: string;
-  position: string;
-  location: string;
-  startDate: string;
-  endDate?: string;
-  isCurrent: boolean;
-  description: string;
-  employmentType: EmploymentType;
-  companyLogoUrl: string;
-  displayOrder: number;
-}
-
-export interface UpdateExperienceDto {
-  company?: string;
-  position?: string;
-  location?: string;
-  employmentType?: EmploymentType;
-  startDate?: string;
-  endDate?: string;
-  isCurrent?: boolean;
-  description?: string;
-  companyLogoUrl?: string;
-  displayOrder?: number;
-}
+// Use utility types
+export type CreateExperienceDto = Omit<Experience, 'id'>;
+export type UpdateExperienceDto = Partial<Omit<Experience, 'id'>>;

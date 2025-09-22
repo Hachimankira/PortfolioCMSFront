@@ -18,26 +18,6 @@ export interface Project {
   displayOrder: number;
 }
 
-export interface CreateProjectDto {
-  title: string;
-  description?: string;
-  featuredImageUrl?: string;
-  technologies?: string;
-  repoUrl?: string;
-  liveUrl?: string;
-  isFeatured: boolean;
-  status?: ProjectStatus;
-  displayOrder: number;
-}
-
-export interface UpdateProjectDto {
-  title?: string;
-  description?: string;
-  featuredImageUrl?: string;
-  technologies?: string;
-  repoUrl?: string;
-  liveUrl?: string;
-  isFeatured?: boolean;
-  status?: ProjectStatus;
-  displayOrder?: number;
-}
+// Use utility types
+export type CreateProjectDto = Omit<Project, 'id'>;
+export type UpdateProjectDto = Partial<Omit<Project, 'id'>>;

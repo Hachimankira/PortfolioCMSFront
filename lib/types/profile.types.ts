@@ -12,12 +12,5 @@ export interface Profile {
     createdAt: string;
 }
 
-export interface UpdateProfileDto {
-    fullName?: string;
-    email?: string;
-    phoneNumber?: string;
-    profilePictureUrl?: string;
-    headline?: string;
-    summary?: string;
-    location?: string;
-}
+// Use utility types
+export type UpdateProfileDto = Partial<Omit<Profile, 'id' | 'userName' | 'createdAt' | 'updatedAt'>>;

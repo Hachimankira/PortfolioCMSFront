@@ -6,16 +6,6 @@ export interface Skill {
     displayOrder: number;
 }
 
-export interface CreateSkillDto {
-    name: string;
-    category: string;
-    level: string;
-    displayOrder: number;
-}
-
-export interface UpdateSkillDto {
-    name: string;
-    category?: string;
-    level?: string;
-    displayOrder?: number;
-}
+// Use utility types
+export type CreateSkillDto = Omit<Skill, 'id'>;
+export type UpdateSkillDto = Partial<Omit<Skill, 'id'>>;
