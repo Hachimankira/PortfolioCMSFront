@@ -10,14 +10,18 @@ interface LinkFormProps {
   onSubmit: (data: CreateLinkDto | UpdateLinkDto) => Promise<void>;
   onCancel: () => void;
   loading?: boolean;
+  serverErrors?: Record<string, string[]> | null;
+
 }
 
-export default function LinkForm({ 
-  link, 
-  onSubmit, 
-  onCancel, 
-  loading = false 
+export default function LinkForm({
+  link,
+  onSubmit,
+  onCancel,
+  loading = false,
+  serverErrors
 }: LinkFormProps) {
+  console.log("🚀 ~ LinkForm ~ serverErrors:", serverErrors)
   const [iconError, setIconError] = useState(false);
 
   const {
@@ -27,7 +31,7 @@ export default function LinkForm({
     formState: { errors }
   } = useForm<CreateLinkDto | UpdateLinkDto>({
     defaultValues: link ? {
-      id: link.id,
+      // id: link.id,
       platform: link.platform,
       url: link.url,
       iconUrl: link.iconUrl || '',
@@ -63,7 +67,7 @@ export default function LinkForm({
       {/* Basic Information */}
       <div className="card">
         <h3 className="text-lg font-medium text-gray-900 mb-4">Social Link Details</h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label htmlFor="platform" className="block text-sm font-medium text-gray-700 mb-2">
@@ -74,7 +78,7 @@ export default function LinkForm({
                 <LinkIcon className="h-5 w-5 text-gray-400" />
               </div>
               <input
-                {...register('platform', { 
+                {...register('platform', {
                   required: 'Platform name is required',
                   maxLength: { value: 50, message: 'Platform name must be 50 characters or less' }
                 })}
@@ -91,6 +95,7 @@ export default function LinkForm({
               </datalist>
             </div>
             {errors.platform && <p className="form-error">{errors.platform.message}</p>}
+            {serverErrors?.Platform && <p className="form-error">{serverErrors?.Platform[0]}</p>}
           </div>
 
           <div>
@@ -102,7 +107,7 @@ export default function LinkForm({
                 <Globe className="h-5 w-5 text-gray-400" />
               </div>
               <input
-                {...register('url', { 
+                {...register('url', {
                   required: 'URL is required',
                   maxLength: { value: 500, message: 'URL must be 500 characters or less' },
                   pattern: {
@@ -117,6 +122,7 @@ export default function LinkForm({
               />
             </div>
             {errors.url && <p className="form-error">{errors.url.message}</p>}
+            {serverErrors?.Url && <p className="form-error">{serverErrors?.Url[0]}</p>}
           </div>
 
           <div className="md:col-span-2">
@@ -138,7 +144,7 @@ export default function LinkForm({
                   </div>
                 )}
               </div>
-              
+
               <div className="flex-1">
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -160,6 +166,8 @@ export default function LinkForm({
                   />
                 </div>
                 {errors.iconUrl && <p className="form-error">{errors.iconUrl.message}</p>}
+                {serverErrors?.IconUrl && <p className="form-error">{serverErrors?.IconUrl[0]}</p>}
+
                 <p className="text-sm text-gray-500 mt-1">
                   Optional: Add an icon URL for the platform (SVG recommended)
                 </p>
@@ -176,7 +184,7 @@ export default function LinkForm({
                 <ListOrdered className="h-5 w-5 text-gray-400" />
               </div>
               <input
-                {...register('displayOrder', { 
+                {...register('displayOrder', {
                   valueAsNumber: true,
                   min: { value: 0, message: 'Display order must be 0 or greater' }
                 })}
@@ -187,6 +195,8 @@ export default function LinkForm({
               />
             </div>
             {errors.displayOrder && <p className="form-error">{errors.displayOrder.message}</p>}
+            {serverErrors?.DisplayOrder && <p className="form-error">{serverErrors?.DisplayOrder[0]}</p>}
+
             <p className="text-sm text-gray-500 mt-1">
               Lower numbers will display first
             </p>
