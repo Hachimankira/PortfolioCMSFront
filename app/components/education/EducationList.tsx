@@ -145,7 +145,7 @@ export default function EducationList({
                 <div className="flex items-center text-gray-500 text-sm mb-3">
                   <Calendar className="h-4 w-4 mr-2" />
                   <span>
-                    {format(new Date(education.startDate), 'MMM yyyy')} - {' '}
+                    {education.startDate ? format(new Date(education.startDate), 'MMM yyyy') : 'N/A'} - {' '}
                     {education.isCurrent 
                       ? 'Present' 
                       : education.endDate 
@@ -154,7 +154,7 @@ export default function EducationList({
                     }
                   </span>
                   <span className="mx-2">•</span>
-                  <span>{calculateDuration(education.startDate, education.endDate, education.isCurrent)}</span>
+                  <span>{calculateDuration(education.startDate ?? '', education.endDate ?? "", education.isCurrent)}</span>
                 </div>
 
                 {education.description && (
