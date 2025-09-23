@@ -29,10 +29,10 @@ export default function EducationPage() {
         if (a.displayOrder !== b.displayOrder) {
           return a.displayOrder - b.displayOrder;
         }
-        return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+        return new Date(b.startDate ?? 0).getTime() - new Date(a.startDate ?? 0).getTime();
       }));
     } catch (error: any) {
-      toast.error(error.message || 'Failed to fetch education records');
+      toast.error(error?.response?.data?.title || 'Failed to fetch education records');
     } finally {
       setLoading(false);
     }
@@ -46,8 +46,8 @@ export default function EducationPage() {
         ...data,
         institution: data.institution ?? '',
         degree: data.degree ?? '',
-        startDate: data.startDate ?? '',
-        endDate: data.endDate ?? '',
+        startDate: data.startDate ? new Date(data.startDate).toISOString() : null,
+        endDate: data.isCurrent ? null : (data.endDate ? new Date(data.endDate).toISOString() : null),
         fieldOfStudy: data.fieldOfStudy ?? '',
         description: data.description ?? '',
         displayOrder: data.displayOrder ?? 0,
@@ -58,12 +58,12 @@ export default function EducationPage() {
         if (a.displayOrder !== b.displayOrder) {
           return a.displayOrder - b.displayOrder;
         }
-        return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+        return new Date(b.startDate ?? '').getTime() - new Date(a.startDate ?? '').getTime();
       }));
       setShowForm(false);
       toast.success('Education record created successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to create education record');
+      toast.error(error?.response?.data?.title || 'Failed to create education record');
       throw error;
     } finally {
       setSubmitting(false);
@@ -72,25 +72,30 @@ export default function EducationPage() {
 
   const handleUpdate = async (data: UpdateEducationDto) => {
     if (!editingEducation) return;
-    
+
     try {
       setSubmitting(true);
-      const updatedEducation = await EducationService.update(editingEducation.id, data);
-      setEducations(prev => 
-        prev.map(edu => 
+      const submitData = {
+        ...data,
+        startDate: data.startDate && new Date(data.startDate).toISOString(),
+        endDate: data.isCurrent ? null : (data.endDate ? new Date(data.endDate).toISOString() : null),
+      }
+      const updatedEducation = await EducationService.update(editingEducation.id, submitData);
+      setEducations(prev =>
+        prev.map(edu =>
           edu.id === editingEducation.id ? updatedEducation : edu
         ).sort((a, b) => {
           if (a.displayOrder !== b.displayOrder) {
             return a.displayOrder - b.displayOrder;
           }
-          return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+          return new Date(b.startDate ?? '').getTime() - new Date(a.startDate ?? '').getTime();
         })
       );
       setEditingEducation(null);
       setShowForm(false);
       toast.success('Education record updated successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to update education record');
+      toast.error(error?.response?.data?.title || 'Failed to update education record');
       throw error;
     } finally {
       setSubmitting(false);
@@ -103,7 +108,7 @@ export default function EducationPage() {
       setEducations(prev => prev.filter(edu => edu.id !== id));
       toast.success('Education record deleted successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to delete education record');
+      toast.error(error?.response?.data?.title || 'Failed to delete education record');
     }
   };
 
@@ -136,13 +141,13 @@ export default function EducationPage() {
             {editingEducation ? 'Edit Education' : 'Add New Education'}
           </h1>
           <p className="mt-1 text-gray-600">
-            {editingEducation 
-              ? 'Update your educational information' 
+            {editingEducation
+              ? 'Update your educational information'
               : 'Add your educational background and qualifications'
             }
           </p>
         </div>
-        
+
         <EducationForm
           education={editingEducation || undefined}
           onSubmit={editingEducation ? handleUpdate : handleCreate}

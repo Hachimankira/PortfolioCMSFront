@@ -10,13 +10,15 @@ interface TestimonialFormProps {
   onSubmit: (data: CreateTestimonialDto | UpdateTestimonialDto) => Promise<void>;
   onCancel: () => void;
   loading?: boolean;
+  serverErrors: Record<string, string[]> | null;
 }
 
-export default function TestimonialForm({ 
-  testimonial, 
-  onSubmit, 
-  onCancel, 
-  loading = false 
+export default function TestimonialForm({
+  testimonial,
+  onSubmit,
+  onCancel,
+  loading = false,
+  serverErrors,
 }: TestimonialFormProps) {
   const [imageError, setImageError] = useState(false);
   const [ratingValue, setRatingValue] = useState<number>(
@@ -31,7 +33,7 @@ export default function TestimonialForm({
     formState: { errors }
   } = useForm<CreateTestimonialDto | UpdateTestimonialDto>({
     defaultValues: testimonial ? {
-      id: testimonial.id,
+      // id: testimonial.id,
       content: testimonial.content,
       clientName: testimonial.clientName,
       clientTitle: testimonial.clientTitle || '',
@@ -70,13 +72,13 @@ export default function TestimonialForm({
           <Quote className="h-5 w-5 mr-2" />
           Testimonial Content
         </h3>
-        
+
         <div>
           <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
             Content *
           </label>
           <textarea
-            {...register('content', { 
+            {...register('content', {
               required: 'Testimonial content is required',
               maxLength: { value: 2000, message: 'Content must be 2000 characters or less' }
             })}
@@ -86,6 +88,8 @@ export default function TestimonialForm({
             placeholder="Enter the testimonial content here..."
           />
           {errors.content && <p className="form-error">{errors.content.message}</p>}
+          {serverErrors?.Content && <p className="form-error">{serverErrors?.Content[0]}</p>}
+
           <div className="flex justify-between items-center mt-1">
             <p className="text-sm text-gray-500">
               Enter the words of your client or testimonial provider
@@ -96,14 +100,14 @@ export default function TestimonialForm({
           </div>
         </div>
       </div>
-      
+
       {/* Client Information */}
       <div className="card">
         <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
           <User className="h-5 w-5 mr-2" />
           Client Information
         </h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="md:col-span-2 flex items-start space-x-4">
             <div className="flex-shrink-0 w-16 h-16">
@@ -120,7 +124,7 @@ export default function TestimonialForm({
                 </div>
               )}
             </div>
-            
+
             <div className="flex-1">
               <label htmlFor="clientImageUrl" className="block text-sm font-medium text-gray-700 mb-2">
                 Client Image URL
@@ -145,6 +149,8 @@ export default function TestimonialForm({
                 />
               </div>
               {errors.clientImageUrl && <p className="form-error">{errors.clientImageUrl.message}</p>}
+              {serverErrors?.ClientImageUrl && <p className="form-error">{serverErrors?.ClientImageUrl[0]}</p>}
+
               <p className="text-sm text-gray-500 mt-1">
                 Optional: Add a photo of the person providing the testimonial
               </p>
@@ -160,7 +166,7 @@ export default function TestimonialForm({
                 <User className="h-5 w-5 text-gray-400" />
               </div>
               <input
-                {...register('clientName', { 
+                {...register('clientName', {
                   required: 'Client name is required',
                   maxLength: { value: 100, message: 'Name must be 100 characters or less' }
                 })}
@@ -171,6 +177,8 @@ export default function TestimonialForm({
               />
             </div>
             {errors.clientName && <p className="form-error">{errors.clientName.message}</p>}
+            {serverErrors?.ClientName && <p className="form-error">{serverErrors?.ClientName[0]}</p>}
+
           </div>
 
           <div>
@@ -192,6 +200,8 @@ export default function TestimonialForm({
               />
             </div>
             {errors.clientTitle && <p className="form-error">{errors.clientTitle.message}</p>}
+            {serverErrors?.ClientTitle && <p className="form-error">{serverErrors?.ClientTitle[0]}</p>}
+
           </div>
 
           <div>
@@ -213,6 +223,8 @@ export default function TestimonialForm({
               />
             </div>
             {errors.clientCompany && <p className="form-error">{errors.clientCompany.message}</p>}
+            {serverErrors?.ClientCompany && <p className="form-error">{serverErrors?.ClientCompany[0]}</p>}
+
           </div>
 
           <div>
@@ -228,8 +240,8 @@ export default function TestimonialForm({
                     onClick={() => handleRatingChange(star)}
                     className="focus:outline-none"
                   >
-                    <Star 
-                      className={`h-8 w-8 ${star <= ratingValue ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} 
+                    <Star
+                      className={`h-8 w-8 ${star <= ratingValue ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
                     />
                   </button>
                 ))}
@@ -246,7 +258,7 @@ export default function TestimonialForm({
       {/* Display Options */}
       <div className="card">
         <h3 className="text-lg font-medium text-gray-900 mb-4">Display Options</h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
             <div className="flex items-center">
@@ -291,7 +303,7 @@ export default function TestimonialForm({
                 <ListOrdered className="h-5 w-5 text-gray-400" />
               </div>
               <input
-                {...register('displayOrder', { 
+                {...register('displayOrder', {
                   valueAsNumber: true,
                   min: { value: 0, message: 'Display order must be 0 or greater' }
                 })}
@@ -302,6 +314,8 @@ export default function TestimonialForm({
               />
             </div>
             {errors.displayOrder && <p className="form-error">{errors.displayOrder.message}</p>}
+            {serverErrors?.DisplayOrder && <p className="form-error">{serverErrors?.DisplayOrder[0]}</p>}
+
             <p className="text-sm text-gray-500 mt-1">
               Lower numbers will display first
             </p>

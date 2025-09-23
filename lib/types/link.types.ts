@@ -7,17 +7,6 @@ export interface Link {
   userId: string;
 }
 
-export interface CreateLinkDto {
-  platform: string;
-  url: string;
-  iconUrl?: string;
-  displayOrder: number;
-}
-
-export interface UpdateLinkDto {
-  id: number;
-  platform: string;
-  url: string;
-  iconUrl?: string;
-  displayOrder: number;
-}
+// Use utility types
+export type CreateLinkDto = Omit<Link, 'id' | 'userId'>;
+export type UpdateLinkDto = Partial<Omit<Link, 'id' | 'userId'>>;

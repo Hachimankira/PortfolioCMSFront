@@ -10,24 +10,6 @@ export interface Certificate {
   displayOrder: number;
 }
 
-export interface CreateCertificateDto {
-  title: string;
-  issuer: string;
-  credentialUrl?: string;
-  credentialId?: string;
-  dateIssued: string;
-  expirationDate?: string;
-  doesNotExpire: boolean;
-  displayOrder: number;
-}
-
-export interface UpdateCertificateDto {
-  title?: string;
-  issuer?: string;
-  credentialUrl?: string;
-  credentialId?: string;
-  dateIssued?: string;
-  expirationDate?: string;
-  doesNotExpire?: boolean;
-  displayOrder?: number;
-}
+// Use utility types to avoid repetition
+export type CreateCertificateDto = Omit<Certificate, 'id'>;
+export type UpdateCertificateDto = Partial<Omit<Certificate, 'id'>>;

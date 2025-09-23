@@ -4,8 +4,8 @@ export interface Education {
   degree: string;
   description?: string;
   fieldOfStudy?: string;
-  startDate: string;
-  endDate?: string;
+  startDate: string | null;
+  endDate?: string | null;
   isCurrent: boolean;
   institutionLogoUrl?: string;
   displayOrder: number;
@@ -13,26 +13,6 @@ export interface Education {
   updatedAt: string;
 }
 
-export interface CreateEducationDto {
-  institution: string;
-  degree: string;
-  description?: string;
-  fieldOfStudy?: string;
-  startDate: string;
-  endDate?: string;
-  isCurrent: boolean;
-  institutionLogoUrl?: string;
-  displayOrder: number;
-}
-
-export interface UpdateEducationDto {
-  institution?: string;
-  degree?: string;
-  description?: string;
-  fieldOfStudy?: string;
-  startDate?: string;
-  endDate?: string;
-  isCurrent?: boolean;
-  institutionLogoUrl?: string;
-  displayOrder?: number;
-}
+// Use utility types
+export type CreateEducationDto = Omit<Education, 'id' | 'createdAt' | 'updatedAt'>;
+export type UpdateEducationDto = Partial<Omit<Education, 'id' | 'createdAt' | 'updatedAt'>>;

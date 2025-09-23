@@ -24,7 +24,7 @@ export default function ProfilePage() {
       const data = await profileService.getProfile();
       setProfile(data);
     } catch (error: any) {
-      toast.error(error.message || 'Failed to fetch profile');
+      toast.error(error?.response?.data?.title || 'Failed to fetch profile');
     } finally {
       setLoading(false);
     }
@@ -37,7 +37,7 @@ export default function ProfilePage() {
       setProfile(updatedProfile);
       toast.success('Profile updated successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to update profile');
+      toast.error(error?.response?.data?.title || 'Failed to update profile');
       throw error;
     } finally {
       setSubmitting(false);

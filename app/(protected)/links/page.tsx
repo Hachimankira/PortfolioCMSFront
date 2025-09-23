@@ -15,6 +15,7 @@ export default function LinksPage() {
   const [editingLink, setEditingLink] = useState<Link | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [errors, setErrors] = useState<Record<string, string[]> | null>(null);
 
   useEffect(() => {
     fetchLinks();
@@ -27,7 +28,7 @@ export default function LinksPage() {
       // Sort by display order
       setLinks(data.sort((a, b) => a.displayOrder - b.displayOrder));
     } catch (error: any) {
-      toast.error(error.message || 'Failed to fetch links');
+      toast.error(error?.response?.data?.title || 'Failed to fetch links');
     } finally {
       setLoading(false);
     }
@@ -44,7 +45,13 @@ export default function LinksPage() {
         toast.success('Link added successfully');
       }
     } catch (error: any) {
-      toast.error(error.message || 'Failed to add link');
+      console.log("🚀 ~ handleCreate ~ error:", error);
+      // Try to get validation errors array or message
+      const apiMessage =
+        error?.response?.data?.title;
+        setErrors(error?.response?.data?.errors);
+      console.log("🚀 ~ handleCreate ~ apiMessage:", apiMessage)
+      toast.error(apiMessage || 'Failed to add link. Please check your input and try again.');
     } finally {
       setSubmitting(false);
     }
@@ -52,26 +59,26 @@ export default function LinksPage() {
 
   const handleUpdate = async (data: UpdateLinkDto | CreateLinkDto) => {
     if (!editingLink) return;
-    
+
     try {
       setSubmitting(true);
       // Ensure we have an ID for the update
       const updateData = {
         ...data,
-        id: editingLink.id
       } as UpdateLinkDto;
-      
+
       const updatedLink = await linkService.update(editingLink.id, updateData);
-      setLinks(prev => 
-        prev.map(link => 
+      setLinks(prev =>
+        prev.map(link =>
           link.id === editingLink.id ? updatedLink : link
         ).sort((a, b) => a.displayOrder - b.displayOrder)
       );
       setEditingLink(null);
       setShowForm(false);
+      setErrors(null);
       toast.success('Link updated successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to update link');
+      toast.error(error?.response?.data?.title || 'Failed to update link');
     } finally {
       setSubmitting(false);
     }
@@ -82,7 +89,7 @@ export default function LinksPage() {
       await linkService.delete(id);
       setLinks(prev => prev.filter(link => link.id !== id));
     } catch (error: any) {
-      toast.error(error.message || 'Failed to delete link');
+      toast.error(error?.response?.data?.title || 'Failed to delete link');
       throw error;
     }
   };
@@ -95,6 +102,7 @@ export default function LinksPage() {
   const handleCancelForm = () => {
     setShowForm(false);
     setEditingLink(null);
+    setErrors(null);
   };
 
   const filteredLinks = links.filter(link =>
@@ -117,18 +125,19 @@ export default function LinksPage() {
             {editingLink ? 'Edit Social Link' : 'Add New Social Link'}
           </h1>
           <p className="mt-1 text-gray-600">
-            {editingLink 
-              ? 'Update your social media link details' 
+            {editingLink
+              ? 'Update your social media link details'
               : 'Connect your portfolio with your online presence'
             }
           </p>
         </div>
-        
+
         <LinkForm
           link={editingLink || undefined}
           onSubmit={editingLink ? handleUpdate : handleCreate}
           onCancel={handleCancelForm}
           loading={submitting}
+          serverErrors={errors}
         />
       </div>
     );

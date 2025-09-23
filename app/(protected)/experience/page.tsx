@@ -32,7 +32,7 @@ export default function ExperiencePage() {
         return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
       }));
     } catch (error: any) {
-      toast.error(error.message || 'Failed to fetch experience records');
+      toast.error(error?.response?.data?.title || 'Failed to fetch experience records');
     } finally {
       setLoading(false);
     }
@@ -50,7 +50,12 @@ export default function ExperiencePage() {
         toast.error('Missing required fields for creating experience');
         return;
       }
-      const newExperience = await ExperienceService.create(data as CreateExperienceDto);
+      const submitData = {
+        ...data,
+        startDate: data.startDate ? new Date(data.startDate).toISOString() : undefined,
+        endDate: data.isCurrent ? undefined : (data.endDate ? new Date(data.endDate).toISOString() : undefined),
+      }
+      const newExperience = await ExperienceService.create(submitData as CreateExperienceDto);
       setExperiences(prev => [...prev, newExperience].sort((a, b) => {
         if (a.displayOrder !== b.displayOrder) {
           return a.displayOrder - b.displayOrder;
@@ -60,7 +65,7 @@ export default function ExperiencePage() {
       setShowForm(false);
       toast.success('Experience added successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to add experience');
+      toast.error(error?.response?.data?.title || 'Failed to add experience');
     } finally {
       setSubmitting(false);
     }
@@ -68,12 +73,17 @@ export default function ExperiencePage() {
 
   const handleUpdate = async (data: UpdateExperienceDto) => {
     if (!editingExperience) return;
-    
+
     try {
       setSubmitting(true);
-      const updatedExperience = await ExperienceService.update(editingExperience.id, data);
-      setExperiences(prev => 
-        prev.map(exp => 
+      const submitData = {
+        ...data,
+        startDate: data.startDate ? new Date(data.startDate).toISOString() : undefined,
+        endDate: data.isCurrent ? undefined : (data.endDate ? new Date(data.endDate).toISOString() : undefined),
+      }
+      const updatedExperience = await ExperienceService.update(editingExperience.id, submitData);
+      setExperiences(prev =>
+        prev.map(exp =>
           exp.id === editingExperience.id ? updatedExperience : exp
         ).sort((a, b) => {
           if (a.displayOrder !== b.displayOrder) {
@@ -86,7 +96,7 @@ export default function ExperiencePage() {
       setShowForm(false);
       toast.success('Experience updated successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to update experience');
+      toast.error(error?.response?.data?.title || 'Failed to update experience');
     } finally {
       setSubmitting(false);
     }
@@ -98,7 +108,7 @@ export default function ExperiencePage() {
       setExperiences(prev => prev.filter(exp => exp.id !== id));
       toast.success('Experience deleted successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to delete experience');
+      toast.error(error?.response?.data?.title || 'Failed to delete experience');
       throw error; // Rethrow for the component to handle
     }
   };
@@ -137,13 +147,13 @@ export default function ExperiencePage() {
             {editingExperience ? 'Edit Experience' : 'Add New Experience'}
           </h1>
           <p className="mt-1 text-gray-600">
-            {editingExperience 
-              ? 'Update your work experience details' 
+            {editingExperience
+              ? 'Update your work experience details'
               : 'Add your professional work experience'
             }
           </p>
         </div>
-        
+
         <ExperienceForm
           experience={editingExperience || undefined}
           onSubmit={editingExperience ? handleUpdate : handleCreate}
