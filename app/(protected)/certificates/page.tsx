@@ -26,7 +26,7 @@ export default function CertificatesPage() {
       const data = await certificateService.getAll();
       setCertificates(data.sort((a, b) => a.displayOrder - b.displayOrder));
     } catch (error: any) {
-      toast.error(error.message || 'Failed to fetch certificates');
+      toast.error(error?.response?.data?.title || 'Failed to fetch certificates');
     } finally {
       setLoading(false);
     }
@@ -49,7 +49,7 @@ export default function CertificatesPage() {
       setShowForm(false);
       toast.success('Certificate created successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to create certificate');
+      toast.error(error?.response?.data?.title || 'Failed to create certificate');
       throw error;
     } finally {
       setSubmitting(false);
@@ -71,7 +71,7 @@ export default function CertificatesPage() {
       setShowForm(false);
       toast.success('Certificate updated successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to update certificate');
+      toast.error(error?.response?.data?.title || 'Failed to update certificate');
       throw error;
     } finally {
       setSubmitting(false);

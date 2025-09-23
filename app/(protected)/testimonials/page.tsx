@@ -30,7 +30,7 @@ export default function TestimonialsPage() {
       // Sort by display order
       setTestimonials(data.sort((a, b) => a.displayOrder - b.displayOrder));
     } catch (error: any) {
-      toast.error(error.message || 'Failed to fetch testimonials');
+      toast.error(error?.response?.data?.title || 'Failed to fetch testimonials');
     } finally {
       setLoading(false);
     }
@@ -72,7 +72,7 @@ export default function TestimonialsPage() {
       setShowForm(false);
       toast.success('Testimonial updated successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to update testimonial');
+      toast.error(error?.response?.data?.title || 'Failed to update testimonial');
     } finally {
       setSubmitting(false);
     }
@@ -83,7 +83,7 @@ export default function TestimonialsPage() {
       await testimonialService.delete(id);
       setTestimonials(prev => prev.filter(testimonial => testimonial.id !== id));
     } catch (error: any) {
-      toast.error(error.message || 'Failed to delete testimonial');
+      toast.error(error?.response?.data?.title || 'Failed to delete testimonial');
       throw error;
     }
   };

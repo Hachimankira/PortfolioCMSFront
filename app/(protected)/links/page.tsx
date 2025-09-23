@@ -28,7 +28,7 @@ export default function LinksPage() {
       // Sort by display order
       setLinks(data.sort((a, b) => a.displayOrder - b.displayOrder));
     } catch (error: any) {
-      toast.error(error.message || 'Failed to fetch links');
+      toast.error(error?.response?.data?.title || 'Failed to fetch links');
     } finally {
       setLoading(false);
     }
@@ -78,7 +78,7 @@ export default function LinksPage() {
       setErrors(null);
       toast.success('Link updated successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to update link');
+      toast.error(error?.response?.data?.title || 'Failed to update link');
     } finally {
       setSubmitting(false);
     }
@@ -89,7 +89,7 @@ export default function LinksPage() {
       await linkService.delete(id);
       setLinks(prev => prev.filter(link => link.id !== id));
     } catch (error: any) {
-      toast.error(error.message || 'Failed to delete link');
+      toast.error(error?.response?.data?.title || 'Failed to delete link');
       throw error;
     }
   };

@@ -97,7 +97,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return false;
     } catch (error: any) {
-      // toast.error(error.message || 'Login failed');
+      // toast.error(error?.response?.data?.title || 'Login failed');
       return false;
     } finally {
       setLoading(false);
@@ -140,7 +140,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return false;
     } catch (error: any) {
-      toast.error(error.message || 'Registration failed');
+      toast.error(error?.response?.data?.title || 'Registration failed');
       return false;
     } finally {
       setLoading(false);

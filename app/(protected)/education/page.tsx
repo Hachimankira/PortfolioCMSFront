@@ -32,7 +32,7 @@ export default function EducationPage() {
         return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
       }));
     } catch (error: any) {
-      toast.error(error.message || 'Failed to fetch education records');
+      toast.error(error?.response?.data?.title || 'Failed to fetch education records');
     } finally {
       setLoading(false);
     }
@@ -63,7 +63,7 @@ export default function EducationPage() {
       setShowForm(false);
       toast.success('Education record created successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to create education record');
+      toast.error(error?.response?.data?.title || 'Failed to create education record');
       throw error;
     } finally {
       setSubmitting(false);
@@ -90,7 +90,7 @@ export default function EducationPage() {
       setShowForm(false);
       toast.success('Education record updated successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to update education record');
+      toast.error(error?.response?.data?.title || 'Failed to update education record');
       throw error;
     } finally {
       setSubmitting(false);
@@ -103,7 +103,7 @@ export default function EducationPage() {
       setEducations(prev => prev.filter(edu => edu.id !== id));
       toast.success('Education record deleted successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to delete education record');
+      toast.error(error?.response?.data?.title || 'Failed to delete education record');
     }
   };
 

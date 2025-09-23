@@ -28,7 +28,7 @@ export default function SkillsPage() {
             // Sort by display order
             setSkills(data.sort((a, b) => a.displayOrder - b.displayOrder));
         } catch (error: any) {
-            toast.error(error.message || 'Failed to fetch skills');
+            toast.error(error?.response?.data?.title || 'Failed to fetch skills');
         } finally {
             setLoading(false);
         }
@@ -50,7 +50,8 @@ export default function SkillsPage() {
             setShowForm(false);
             toast.success('Skill added successfully');
         } catch (error: any) {
-            toast.error(error.message || 'Failed to add skill');
+            console.log("🚀 ~ handleCreate ~ error:", error)
+            toast.error(error?.response?.data?.title || 'Failed to add skill');
         } finally {
             setSubmitting(false);
         }
@@ -71,7 +72,7 @@ export default function SkillsPage() {
             setShowForm(false);
             toast.success('Skill updated successfully');
         } catch (error: any) {
-            toast.error(error.message || 'Failed to update skill');
+            toast.error(error?.response?.data?.title || 'Failed to update skill');
         } finally {
             setSubmitting(false);
         }
@@ -83,7 +84,7 @@ export default function SkillsPage() {
             setSkills(prev => prev.filter(skill => skill.id !== id));
             //   return true;
         } catch (error: any) {
-            toast.error(error.message || 'Failed to delete skill');
+            toast.error(error?.response?.data?.title || 'Failed to delete skill');
             throw error;
         }
     };

@@ -28,7 +28,7 @@ export default function ProjectsPage() {
       // Sort by display order
       setProjects(data.sort((a, b) => a.displayOrder - b.displayOrder));
     } catch (error: any) {
-      toast.error(error.message || 'Failed to fetch projects');
+      toast.error(error?.response?.data?.title || 'Failed to fetch projects');
     } finally {
       setLoading(false);
     }
@@ -42,7 +42,8 @@ export default function ProjectsPage() {
       setShowForm(false);
       toast.success('Project created successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to create project');
+      console.log("🚀 ~ handleCreate ~ error:", error)
+      toast.error(error?.response?.data?.title || 'Failed to create project');
     } finally {
       setSubmitting(false);
     }
@@ -63,7 +64,7 @@ export default function ProjectsPage() {
       setShowForm(false);
       toast.success('Project updated successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to update project');
+      toast.error(error?.response?.data?.title || 'Failed to update project');
     } finally {
       setSubmitting(false);
     }
@@ -74,7 +75,7 @@ export default function ProjectsPage() {
       await projectService.delete(id);
       setProjects(prev => prev.filter(proj => proj.id !== id));
     } catch (error: any) {
-      toast.error(error.message || 'Failed to delete project');
+      toast.error(error?.response?.data?.title || 'Failed to delete project');
       throw error;
     }
   };

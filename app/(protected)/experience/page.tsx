@@ -32,7 +32,7 @@ export default function ExperiencePage() {
         return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
       }));
     } catch (error: any) {
-      toast.error(error.message || 'Failed to fetch experience records');
+      toast.error(error?.response?.data?.title || 'Failed to fetch experience records');
     } finally {
       setLoading(false);
     }
@@ -60,7 +60,7 @@ export default function ExperiencePage() {
       setShowForm(false);
       toast.success('Experience added successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to add experience');
+      toast.error(error?.response?.data?.title || 'Failed to add experience');
     } finally {
       setSubmitting(false);
     }
@@ -86,7 +86,7 @@ export default function ExperiencePage() {
       setShowForm(false);
       toast.success('Experience updated successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to update experience');
+      toast.error(error?.response?.data?.title || 'Failed to update experience');
     } finally {
       setSubmitting(false);
     }
@@ -98,7 +98,7 @@ export default function ExperiencePage() {
       setExperiences(prev => prev.filter(exp => exp.id !== id));
       toast.success('Experience deleted successfully');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to delete experience');
+      toast.error(error?.response?.data?.title || 'Failed to delete experience');
       throw error; // Rethrow for the component to handle
     }
   };

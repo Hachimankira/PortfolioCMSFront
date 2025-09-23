@@ -44,7 +44,7 @@ function ResetPasswordForm() {
         toast.error(response.message || 'Failed to reset password');
       }
     } catch (error: any) {
-      toast.error(error.message || 'An error occurred');
+      toast.error(error?.response?.data?.title || 'An error occurred');
     } finally {
       setLoading(false);
     }
