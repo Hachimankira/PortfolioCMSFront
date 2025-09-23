@@ -57,13 +57,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const userData = await authService.getCurrentUser();
           setUser(userData);
         } catch (error: any) {
-          // If error is 401, try to refresh the token
           if (error.response && error.response.status === 401) {
             const refreshSuccess = await refreshAccessToken();
             if (refreshSuccess) {
-              // Try getting user data again with new token
-              const userData = await authService.getCurrentUser();
-              setUser(userData);
+              try {
+                const userData = await authService.getCurrentUser();
+                setUser(userData);
+              } catch {
+                // If still fails, logout
+                logout();
+              }
+            } else {
+              // If refresh fails, logout
+              logout();
             }
           } else {
             throw error;

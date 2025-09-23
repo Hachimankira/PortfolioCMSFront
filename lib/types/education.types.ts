@@ -4,8 +4,8 @@ export interface Education {
   degree: string;
   description?: string;
   fieldOfStudy?: string;
-  startDate: string;
-  endDate?: string;
+  startDate: string | null;
+  endDate?: string | null;
   isCurrent: boolean;
   institutionLogoUrl?: string;
   displayOrder: number;

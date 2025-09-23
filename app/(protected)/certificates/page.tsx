@@ -44,7 +44,12 @@ export default function CertificatesPage() {
     }
     try {
       setSubmitting(true);
-      const newCertificate = await certificateService.create(data as CreateCertificateDto);
+      const submitData = {
+        ...data,
+        dateIssued: data.dateIssued ? new Date(data.dateIssued).toISOString() : null,
+        expirationDate: data.doesNotExpire ? null : (data.expirationDate ? new Date(data.expirationDate).toISOString() : null),
+      }
+      const newCertificate = await certificateService.create(submitData as CreateCertificateDto);
       setCertificates(prev => [...prev, newCertificate].sort((a, b) => a.displayOrder - b.displayOrder));
       setShowForm(false);
       toast.success('Certificate created successfully');
@@ -58,12 +63,19 @@ export default function CertificatesPage() {
 
   const handleUpdate = async (data: UpdateCertificateDto) => {
     if (!editingCertificate) return;
-    
+
     try {
       setSubmitting(true);
-      const updatedCertificate = await certificateService.update(editingCertificate.id, data);
-      setCertificates(prev => 
-        prev.map(cert => 
+      const submitData = {
+        ...data,
+        dateIssued: data.dateIssued ? new Date(data.dateIssued).toISOString() : undefined,
+        expirationDate: data.doesNotExpire
+          ? undefined
+          : (data.expirationDate ? new Date(data.expirationDate).toISOString() : undefined),
+      }
+      const updatedCertificate = await certificateService.update(editingCertificate.id, submitData);
+      setCertificates(prev =>
+        prev.map(cert =>
           cert.id === editingCertificate.id ? updatedCertificate : cert
         ).sort((a, b) => a.displayOrder - b.displayOrder)
       );
@@ -106,7 +118,7 @@ export default function CertificatesPage() {
             {editingCertificate ? 'Edit Certificate' : 'Add New Certificate'}
           </h1>
         </div>
-        
+
         <div className="card">
           <CertificateForm
             certificate={editingCertificate || undefined}

@@ -16,6 +16,7 @@ export default function ProjectsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<ProjectStatus | 'all'>('all');
+  const [serverErrors, setServerErrors] = useState<Record<string, string[]> | null>(null);
 
   useEffect(() => {
     fetchProjects();
@@ -42,8 +43,8 @@ export default function ProjectsPage() {
       setShowForm(false);
       toast.success('Project created successfully');
     } catch (error: any) {
-      console.log("🚀 ~ handleCreate ~ error:", error)
       toast.error(error?.response?.data?.title || 'Failed to create project');
+      setServerErrors(error?.response?.data?.errors)
     } finally {
       setSubmitting(false);
     }
@@ -51,12 +52,12 @@ export default function ProjectsPage() {
 
   const handleUpdate = async (data: UpdateProjectDto) => {
     if (!editingProject) return;
-    
+
     try {
       setSubmitting(true);
       const updatedProject = await projectService.update(editingProject.id, data);
-      setProjects(prev => 
-        prev.map(proj => 
+      setProjects(prev =>
+        prev.map(proj =>
           proj.id === editingProject.id ? updatedProject : proj
         ).sort((a, b) => a.displayOrder - b.displayOrder)
       );
@@ -65,6 +66,7 @@ export default function ProjectsPage() {
       toast.success('Project updated successfully');
     } catch (error: any) {
       toast.error(error?.response?.data?.title || 'Failed to update project');
+      setServerErrors(error?.response?.data?.errors)
     } finally {
       setSubmitting(false);
     }
@@ -91,12 +93,12 @@ export default function ProjectsPage() {
   };
 
   const filteredProjects = projects.filter(proj => {
-    const matchesSearch = proj.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         proj.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         proj.technologies?.toLowerCase().includes(searchTerm.toLowerCase());
-    
+    const matchesSearch = proj.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      proj.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      proj.technologies?.toLowerCase().includes(searchTerm.toLowerCase());
+
     const matchesStatus = statusFilter === 'all' || proj.status === statusFilter;
-    
+
     return matchesSearch && matchesStatus;
   });
 
@@ -114,13 +116,13 @@ export default function ProjectsPage() {
             {editingProject ? 'Edit Project' : 'Add New Project'}
           </h1>
           <p className="mt-1 text-gray-600">
-            {editingProject 
-              ? 'Update your project details' 
+            {editingProject
+              ? 'Update your project details'
               : 'Add a new project to your portfolio'
             }
           </p>
         </div>
-        
+
         <ProjectForm
           project={editingProject || undefined}
           onSubmit={async (data) => {
@@ -134,6 +136,7 @@ export default function ProjectsPage() {
           }}
           onCancel={handleCancelForm}
           loading={submitting}
+          serverErrors={serverErrors}
         />
       </div>
     );
@@ -197,7 +200,7 @@ export default function ProjectsPage() {
               className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
-          
+
           <div className="relative w-full sm:w-64">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Filter className="h-5 w-5 text-gray-400" />

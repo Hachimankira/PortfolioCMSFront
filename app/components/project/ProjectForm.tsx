@@ -10,13 +10,15 @@ interface ProjectFormProps {
   onSubmit: (data: CreateProjectDto | UpdateProjectDto) => Promise<void>;
   onCancel: () => void;
   loading?: boolean;
+  serverErrors: Record<string, string[]> | null;
 }
 
-export default function ProjectForm({ 
-  project, 
-  onSubmit, 
-  onCancel, 
-  loading = false 
+export default function ProjectForm({
+  project,
+  onSubmit,
+  onCancel,
+  loading = false,
+  serverErrors
 }: ProjectFormProps) {
   const [imageError, setImageError] = useState(false);
 
@@ -59,7 +61,7 @@ export default function ProjectForm({
           <Image className="h-5 w-5 mr-2" />
           Featured Image
         </h3>
-        
+
         <div className="flex items-start space-x-6">
           <div className="flex-shrink-0">
             {featuredImageUrl && !imageError ? (
@@ -75,7 +77,7 @@ export default function ProjectForm({
               </div>
             )}
           </div>
-          
+
           <div className="flex-1">
             <label htmlFor="featuredImageUrl" className="block text-sm font-medium text-gray-700 mb-2">
               Featured Image URL
@@ -95,6 +97,7 @@ export default function ProjectForm({
               onChange={() => setImageError(false)}
             />
             {errors.featuredImageUrl && <p className="form-error">{errors.featuredImageUrl.message}</p>}
+            {serverErrors?.FeaturedImageUrl && <p className="form-error">{serverErrors?.FeaturedImageUrl[0]}</p>}
             <p className="text-sm text-gray-500 mt-1">
               Add an image to showcase your project
             </p>
@@ -108,14 +111,14 @@ export default function ProjectForm({
           <FileText className="h-5 w-5 mr-2" />
           Project Details
         </h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="md:col-span-2">
             <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
               Project Title *
             </label>
             <input
-              {...register('title', { 
+              {...register('title', {
                 required: 'Title is required',
                 maxLength: { value: 150, message: 'Title must be 150 characters or less' }
               })}
@@ -125,6 +128,8 @@ export default function ProjectForm({
               placeholder="e.g. Portfolio Website"
             />
             {errors.title && <p className="form-error">{errors.title.message}</p>}
+            {serverErrors?.Title && <p className="form-error">{serverErrors?.Title[0]}</p>}
+
           </div>
 
           <div className="md:col-span-2">
@@ -141,6 +146,8 @@ export default function ProjectForm({
               placeholder="Describe your project, its purpose, features, and technologies used..."
             />
             {errors.description && <p className="form-error">{errors.description.message}</p>}
+            {serverErrors?.Description && <p className="form-error">{serverErrors?.Description[0]}</p>}
+
             <div className="flex justify-between items-center mt-1">
               <p className="text-sm text-gray-500">
                 Provide details about your project
@@ -170,6 +177,8 @@ export default function ProjectForm({
               />
             </div>
             {errors.technologies && <p className="form-error">{errors.technologies.message}</p>}
+            {serverErrors?.Technologies && <p className="form-error">{serverErrors?.Technologies[0]}</p>}
+
             <p className="text-sm text-gray-500 mt-1">
               Comma-separated list of technologies used
             </p>
@@ -184,7 +193,7 @@ export default function ProjectForm({
                 <BarChart className="h-5 w-5 text-gray-400" />
               </div>
               <select
-                {...register('status', { 
+                {...register('status', {
                   valueAsNumber: true
                 })}
                 id="status"
@@ -200,6 +209,8 @@ export default function ProjectForm({
               </select>
             </div>
             {errors.status && <p className="form-error">{errors.status.message}</p>}
+            {serverErrors?.Status && <p className="form-error">{serverErrors?.Status[0]}</p>}
+
           </div>
         </div>
       </div>
@@ -210,7 +221,7 @@ export default function ProjectForm({
           <Link2 className="h-5 w-5 mr-2" />
           Project Links
         </h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label htmlFor="repoUrl" className="block text-sm font-medium text-gray-700 mb-2">
@@ -235,6 +246,8 @@ export default function ProjectForm({
               />
             </div>
             {errors.repoUrl && <p className="form-error">{errors.repoUrl.message}</p>}
+            {serverErrors?.RepoUrl && <p className="form-error">{serverErrors?.RepoUrl[0]}</p>}
+
           </div>
 
           <div>
@@ -260,6 +273,8 @@ export default function ProjectForm({
               />
             </div>
             {errors.liveUrl && <p className="form-error">{errors.liveUrl.message}</p>}
+            {serverErrors?.LiveUrl && <p className="form-error">{serverErrors?.LiveUrl[0]}</p>}
+
           </div>
         </div>
       </div>
@@ -269,7 +284,7 @@ export default function ProjectForm({
         <h3 className="text-lg font-medium text-gray-900 mb-4">
           Additional Options
         </h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <div className="flex items-center">
@@ -293,7 +308,7 @@ export default function ProjectForm({
               Display Order *
             </label>
             <input
-              {...register('displayOrder', { 
+              {...register('displayOrder', {
                 required: 'Display order is required',
                 valueAsNumber: true,
                 min: { value: 0, message: 'Display order must be 0 or greater' }
@@ -304,6 +319,8 @@ export default function ProjectForm({
               placeholder="0"
             />
             {errors.displayOrder && <p className="form-error">{errors.displayOrder.message}</p>}
+            {serverErrors?.DisplayOrder && <p className="form-error">{serverErrors?.DisplayOrder[0]}</p>}
+
             <p className="text-xs text-gray-500 mt-1">
               Lower numbers will display first
             </p>
