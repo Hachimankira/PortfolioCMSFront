@@ -20,14 +20,22 @@ export default function Navbar() {
               </Link>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <Link 
-                href="/" 
+              <Link
+                href="/"
                 className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
               >
                 Home
               </Link>
-              <Link 
-                href="/documentation" 
+
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              >
+                Dashboard
+              </Link>
+
+              <Link
+                href="/documentation"
                 className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
               >
                 Documentation
@@ -50,8 +58,8 @@ export default function Navbar() {
             {isAuthenticated ? (
               <div className="relative ml-3">
                 <div className="flex items-center space-x-4">
-                  <Link 
-                    href="/dashboard" 
+                  <Link
+                    href="/dashboard"
                     className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
                   >
                     Dashboard
@@ -66,14 +74,14 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="flex items-center space-x-4">
-                <Link 
-                  href="/login" 
+                <Link
+                  href="/login"
                   className="text-sm font-medium text-gray-500 hover:text-gray-700"
                 >
                   Login
                 </Link>
-                <Link 
-                  href="/register" 
+                <Link
+                  href="/register"
                   className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
                 >
                   Sign up
@@ -100,15 +108,15 @@ export default function Navbar() {
       {/* Mobile menu */}
       <div className={`${isOpen ? 'block' : 'hidden'} sm:hidden`}>
         <div className="pt-2 pb-3 space-y-1">
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 hover:border-gray-300"
             onClick={() => setIsOpen(false)}
           >
             Home
           </Link>
-          <Link 
-            href="/documentation" 
+          <Link
+            href="/documentation"
             className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 hover:border-gray-300"
             onClick={() => setIsOpen(false)}
           >
@@ -133,8 +141,8 @@ export default function Navbar() {
           <div className="space-y-1">
             {isAuthenticated ? (
               <>
-                <Link 
-                  href="/dashboard" 
+                <Link
+                  href="/dashboard"
                   className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 hover:border-gray-300"
                   onClick={() => setIsOpen(false)}
                 >
@@ -152,15 +160,15 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link 
-                  href="/login" 
+                <Link
+                  href="/login"
                   className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 hover:border-gray-300"
                   onClick={() => setIsOpen(false)}
                 >
                   Login
                 </Link>
-                <Link 
-                  href="/register" 
+                <Link
+                  href="/register"
                   className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 hover:border-gray-300"
                   onClick={() => setIsOpen(false)}
                 >
