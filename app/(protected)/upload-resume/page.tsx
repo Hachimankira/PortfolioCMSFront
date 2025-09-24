@@ -7,6 +7,7 @@ export default function UploadResumePage() {
     const [file, setFile] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<any>(null);
+    console.log("🚀 ~ UploadResumePage ~ result:", result)
     const [dragActive, setDragActive] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -56,15 +57,16 @@ export default function UploadResumePage() {
 
         setLoading(true);
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append("resume", file);
 
         try {
-            const res = await apiClient.post("/api/resume/upload", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
+            const res = await fetch("/api/upload-resume", {
+                method: "POST",
+                body: formData,
             });
-            setResult(res.data);
+            const data = await res.json();
+            console.log("🚀 ~ handleSubmit ~ data:", data)
+            setResult(data);
         } catch (error: any) {
             setResult({ error: error?.response?.data || "Upload failed" });
         } finally {
