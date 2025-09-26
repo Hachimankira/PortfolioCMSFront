@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { useAuth } from '@/app/contexts/AuthContext';
+import Image from 'next/image';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,8 +17,15 @@ export default function Navbar() {
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
               <Link href="/" className="text-xl font-bold text-primary-600">
-                Portfolio CMS
+                {/* Portfolio CMS */}
+                <Image
+                  src="/logo.jpg"
+                  alt="Logo"
+                  width={124}
+                  height={124}
+                />
               </Link>
+
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               <Link
