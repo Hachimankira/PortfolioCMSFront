@@ -11,7 +11,7 @@ export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
 
   return (
-    <nav className="bg-white shadow-sm">
+    <nav className="bg-white shadow-sm relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
@@ -113,76 +113,70 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* Mobile menu backdrop */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-opacity-25 z-40 sm:hidden" 
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
       {/* Mobile menu */}
-      <div className={`${isOpen ? 'block' : 'hidden'} sm:hidden`}>
-        <div className="pt-2 pb-3 space-y-1">
+      <div className={`${isOpen ? 'block' : 'hidden'} sm:hidden absolute top-full left-0 w-full bg-white shadow-lg z-50 border-t border-gray-200`}>
+        <div className="px-4 py-3 space-y-1">
           <Link
             href="/"
-            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 hover:border-gray-300"
+            className="block py-2 text-base font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-md px-2"
             onClick={() => setIsOpen(false)}
           >
             Home
           </Link>
           <Link
             href="/documentation"
-            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 hover:border-gray-300"
+            className="block py-2 text-base font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-md px-2"
             onClick={() => setIsOpen(false)}
           >
             Documentation
           </Link>
-          {/* <Link 
-            href="/features" 
-            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 hover:border-gray-300"
-            onClick={() => setIsOpen(false)}
-          >
-            Features
-          </Link>
-          <Link 
-            href="/pricing" 
-            className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 hover:border-gray-300"
-            onClick={() => setIsOpen(false)}
-          >
-            Pricing
-          </Link> */}
-        </div>
-        <div className="pt-4 pb-3 border-t border-gray-200">
-          <div className="space-y-1">
+          {isAuthenticated && (
+            <Link
+              href="/dashboard"
+              className="block py-2 text-base font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-md px-2"
+              onClick={() => setIsOpen(false)}
+            >
+              Dashboard
+            </Link>
+          )}
+          
+          {/* Auth section */}
+          <div className="border-t border-gray-100 pt-3 mt-3">
             {isAuthenticated ? (
-              <>
-                <Link
-                  href="/dashboard"
-                  className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 hover:border-gray-300"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Dashboard
-                </Link>
-                <button
-                  onClick={() => {
-                    logout();
-                    setIsOpen(false);
-                  }}
-                  className="block w-full text-left pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 hover:border-gray-300"
-                >
-                  Logout
-                </button>
-              </>
+              <button
+                onClick={() => {
+                  logout();
+                  setIsOpen(false);
+                }}
+                className="block w-full text-left py-2 text-base font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-md px-2"
+              >
+                Logout
+              </button>
             ) : (
-              <>
+              <div className="space-y-1">
                 <Link
                   href="/login"
-                  className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 hover:border-gray-300"
+                  className="block py-2 text-base font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-md px-2"
                   onClick={() => setIsOpen(false)}
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 hover:border-gray-300"
+                  className="block py-2 text-base font-semibold text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-md px-2"
                   onClick={() => setIsOpen(false)}
                 >
                   Sign up
                 </Link>
-              </>
+              </div>
             )}
           </div>
         </div>
