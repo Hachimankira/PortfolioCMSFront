@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import ProtectedRoute from '../../components/ProtectedRoutes';
-import { RefreshCw, Shield, AlertCircle, Loader2 } from 'lucide-react';
+import { RefreshCw, Shield, AlertCircle, Loader2, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { CopyButton } from '@/app/components/documentation/CopyButton';
 import apiKeyService from '@/lib/services/apikey.service';
@@ -17,6 +17,7 @@ export default function DashboardPage() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [showApiKey, setShowApiKey] = useState(false);
   
   // Fetch current API key on page load
   useEffect(() => {
@@ -61,6 +62,12 @@ export default function DashboardPage() {
     }
   };
 
+  const maskApiKey = (key: string) => {
+    if (!key) return '';
+    if (key.length <= 8) return '•'.repeat(key.length);
+    return key.slice(0, 4) + '•'.repeat(key.length - 8) + key.slice(-4);
+  };
+
   return (
     <ProtectedRoute>
       <div className="py-6">
@@ -94,9 +101,24 @@ export default function DashboardPage() {
                 ) : (
                   <div className="flex items-center justify-between">
                     <div className="font-mono text-sm truncate max-w-sm">
-                      {apiKey || 'No API key found'}
+                      {apiKey ? (showApiKey ? apiKey : maskApiKey(apiKey)) : 'No API key found'}
                     </div>
-                    {apiKey && <CopyButton textToCopy={apiKey} />}
+                    <div className="flex items-center space-x-2">
+                      {apiKey && (
+                        <button
+                          onClick={() => setShowApiKey(!showApiKey)}
+                          className="p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 rounded"
+                          title={showApiKey ? 'Hide API key' : 'Show API key'}
+                        >
+                          {showApiKey ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </button>
+                      )}
+                      {apiKey && <CopyButton textToCopy={apiKey} />}
+                    </div>
                   </div>
                 )}
               </div>
