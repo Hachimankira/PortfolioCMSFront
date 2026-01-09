@@ -30,21 +30,21 @@ export default function Navbar() {
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               <Link
                 href="/"
-                className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-md font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
               >
                 Home
               </Link>
 
               <Link
                 href="/dashboard"
-                className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-md font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
               >
                 Dashboard
               </Link>
 
               <Link
                 href="/documentation"
-                className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-md font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
               >
                 Documentation
               </Link>
@@ -84,13 +84,13 @@ export default function Navbar() {
               <div className="flex items-center space-x-4">
                 <Link
                   href="/login"
-                  className="text-sm font-medium text-gray-500 hover:text-gray-700"
+                  className="text-md font-medium text-gray-500 hover:text-gray-700"
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
+                  className="inline-flex items-center px-3 py-1.5 border border-transparent text-md font-medium rounded-md text-gray-500 hover:text-gray-700"
                 >
                   Sign up
                 </Link>

@@ -38,13 +38,17 @@ export const authService = {
     }
   },
 
-  async register(email: string, password: string, confirmPassword: string): Promise<AuthResponse> {
-    const response = await apiClient.post('/register', {
-      email,
-      password,
-      confirmPassword
-    });
-    return response.data;
+  async register(email: string, password: string, confirmPassword: string) {
+    try {
+      return await apiClient.post('/register', {
+        email,
+        password,
+        confirmPassword
+      });
+    } catch (error: any) {
+      // Re-throw the error so the calling code can handle it
+      throw error;
+    }
   },
 
   async getCurrentUser() {

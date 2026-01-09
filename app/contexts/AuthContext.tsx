@@ -23,7 +23,11 @@ interface User {
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
-  register: (email: string, password: string, confirmPassword: string) => Promise<boolean>;
+  register: (email: string, password: string, confirmPassword: string) => Promise<{
+    success: boolean;
+    errors?: Record<string, string[]>;
+    message?: string;
+  }>;
   logout: () => void;
   loading: boolean;
   isAuthenticated: boolean;
@@ -132,22 +136,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const register = async (email: string, password: string, confirmPassword: string): Promise<boolean> => {
+  const register = async (email: string, password: string, confirmPassword: string): Promise<{
+    success: boolean;
+    errors?: Record<string, string[]>;
+    message?: string;
+  }> => {
     try {
       setLoading(true);
       const response = await authService.register(email, password, confirmPassword);
 
-      if (response.accessToken) {
-        Cookies.set('auth_token', response.accessToken, { expires: 7 });
+      if (response.status === 200) {
         // setUser(response.user);
         toast.success('Registration successful!');
         router.push('/login');
-        return true;
+        return { success: true };
       }
-      return false;
+      return { success: false, message: 'Registration failed' };
     } catch (error: any) {
-      toast.error(error?.response?.data?.title || 'Registration failed');
-      return false;
+      const errorData = error?.response?.data;
+      const title = errorData?.title || 'Registration failed';
+      const errors = errorData?.errors;
+
+      // Show toast with the main error message
+      toast.error(title);
+
+      // Return detailed error information for the form
+      return {
+        success: false,
+        message: title,
+        errors: errors
+      };
     } finally {
       setLoading(false);
     }
