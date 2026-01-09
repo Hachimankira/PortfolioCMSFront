@@ -10,6 +10,22 @@ interface ProfilePreviewProps {
 
 export default function ProfilePreview({ profile }: ProfilePreviewProps) {
   const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
+    setImageError(false);
+  };
+
+  const handleImageError = () => {
+    setImageLoading(false);
+    setImageError(true);
+  };
+
+  const handleImageLoadStart = () => {
+    setImageLoading(true);
+    setImageError(false);
+  };
 
   return (
     <div className="card">
@@ -19,18 +35,30 @@ export default function ProfilePreview({ profile }: ProfilePreviewProps) {
       <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-6">
         {/* Profile Picture */}
         <div className="flex-shrink-0">
-          {profile.profilePictureUrl && !imageError ? (
-            <img
-              src={profile.profilePictureUrl}
-              alt={profile.fullName || 'Profile'}
-              className="h-20 w-20 rounded-full object-cover border-4 border-primary-200"
-              onError={() => setImageError(true)}
-            />
-          ) : (
-            <div className="h-20 w-20 rounded-full bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
-              <User className="h-10 w-10 text-primary-600" />
-            </div>
-          )}
+          <div className="relative">
+            {profile.profilePictureUrl && !imageError ? (
+              <>
+                {imageLoading && (
+                  <div className="absolute inset-0 h-20 w-20 rounded-full bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-600"></div>
+                  </div>
+                )}
+                <img
+                  src={profile.profilePictureUrl}
+                  alt={profile.fullName || 'Profile'}
+                  className="h-20 w-20 rounded-full object-cover border-4 border-primary-200"
+                  onLoad={handleImageLoad}
+                  onError={handleImageError}
+                  onLoadStart={handleImageLoadStart}
+                  style={{ opacity: imageLoading ? 0 : 1 }}
+                />
+              </>
+            ) : (
+              <div className="h-20 w-20 rounded-full bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
+                <User className="h-10 w-10 text-primary-600" />
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Basic Info */}
