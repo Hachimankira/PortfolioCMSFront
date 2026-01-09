@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import ProtectedRoute from '../../components/ProtectedRoutes';
-import { RefreshCw, Shield, AlertCircle, Loader2 } from 'lucide-react';
+import { RefreshCw, Shield, AlertCircle, Loader2, Eye, EyeOff, User, Plus, Award, ArrowRight } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { CopyButton } from '@/app/components/documentation/CopyButton';
 import apiKeyService from '@/lib/services/apikey.service';
+import Link from 'next/link';
 
 
 export default function DashboardPage() {
@@ -17,6 +18,7 @@ export default function DashboardPage() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [showApiKey, setShowApiKey] = useState(false);
   
   // Fetch current API key on page load
   useEffect(() => {
@@ -61,6 +63,12 @@ export default function DashboardPage() {
     }
   };
 
+  const maskApiKey = (key: string) => {
+    if (!key) return '';
+    if (key.length <= 8) return '•'.repeat(key.length);
+    return key.slice(0, 4) + '•'.repeat(key.length - 8) + key.slice(-4);
+  };
+
   return (
     <ProtectedRoute>
       <div className="py-6">
@@ -94,9 +102,24 @@ export default function DashboardPage() {
                 ) : (
                   <div className="flex items-center justify-between">
                     <div className="font-mono text-sm truncate max-w-sm">
-                      {apiKey || 'No API key found'}
+                      {apiKey ? (showApiKey ? apiKey : maskApiKey(apiKey)) : 'No API key found'}
                     </div>
-                    {apiKey && <CopyButton textToCopy={apiKey} />}
+                    <div className="flex items-center space-x-2">
+                      {apiKey && (
+                        <button
+                          onClick={() => setShowApiKey(!showApiKey)}
+                          className="p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 rounded"
+                          title={showApiKey ? 'Hide API key' : 'Show API key'}
+                        >
+                          {showApiKey ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </button>
+                      )}
+                      {apiKey && <CopyButton textToCopy={apiKey} />}
+                    </div>
                   </div>
                 )}
               </div>
@@ -219,22 +242,149 @@ export default function DashboardPage() {
         
         {/* Quick Links Section */}
         <div className="mt-8">
-          <h2 className="text-lg font-medium text-gray-900">Quick Actions</h2>
-          <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            <button className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
-              <h3 className="text-lg font-medium text-gray-900">Edit Profile</h3>
-              <p className="mt-2 text-sm text-gray-500">Update your personal information and headline</p>
-            </button>
+          <h2 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             
-            <button className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
-              <h3 className="text-lg font-medium text-gray-900">Add New Project</h3>
-              <p className="mt-2 text-sm text-gray-500">Showcase your latest work in your portfolio</p>
-            </button>
+            {/* Edit Profile Card */}
+            <Link href="/profile" className="group">
+              <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-blue-300 cursor-pointer">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <User className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-lg font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                        Edit Profile
+                      </h3>
+                    </div>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+                </div>
+                <p className="mt-3 text-sm text-gray-500 group-hover:text-gray-700 transition-colors">
+                  Update your personal information, headline, and professional summary
+                </p>
+              </div>
+            </Link>
             
-            <button className="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow">
-              <h3 className="text-lg font-medium text-gray-900">Update Skills</h3>
-              <p className="mt-2 text-sm text-gray-500">Add or modify your technical and professional skills</p>
-            </button>
+            {/* Add New Project Card */}
+            <Link href="/projects" className="group">
+              <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-green-300 cursor-pointer">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <Plus className="h-6 w-6 text-green-600" />
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-lg font-medium text-gray-900 group-hover:text-green-600 transition-colors">
+                        Add New Project
+                      </h3>
+                    </div>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-green-600 group-hover:translate-x-1 transition-all" />
+                </div>
+                <p className="mt-3 text-sm text-gray-500 group-hover:text-gray-700 transition-colors">
+                  Showcase your latest work and add it to your portfolio
+                </p>
+              </div>
+            </Link>
+            
+            {/* Update Skills Card */}
+            <Link href="/skills" className="group">
+              <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-purple-300 cursor-pointer">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <Award className="h-6 w-6 text-purple-600" />
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-lg font-medium text-gray-900 group-hover:text-purple-600 transition-colors">
+                        Update Skills
+                      </h3>
+                    </div>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all" />
+                </div>
+                <p className="mt-3 text-sm text-gray-500 group-hover:text-gray-700 transition-colors">
+                  Add or modify your technical and professional skills
+                </p>
+              </div>
+            </Link>
+            
+            {/* Add Experience Card */}
+            <Link href="/experience" className="group">
+              <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-orange-300 cursor-pointer">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <svg className="h-6 w-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m8 0H8m8 0v2a2 2 0 01-2 2H10a2 2 0 01-2-2V8m8 0V6a2 2 0 00-2-2H10a2 2 0 00-2 2v2" />
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-lg font-medium text-gray-900 group-hover:text-orange-600 transition-colors">
+                        Add Experience
+                      </h3>
+                    </div>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-orange-600 group-hover:translate-x-1 transition-all" />
+                </div>
+                <p className="mt-3 text-sm text-gray-500 group-hover:text-gray-700 transition-colors">
+                  Document your work experience and career achievements
+                </p>
+              </div>
+            </Link>
+            
+            {/* Add Education Card */}
+            <Link href="/education" className="group">
+              <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-indigo-300 cursor-pointer">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <svg className="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-lg font-medium text-gray-900 group-hover:text-indigo-600 transition-colors">
+                        Add Education
+                      </h3>
+                    </div>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all" />
+                </div>
+                <p className="mt-3 text-sm text-gray-500 group-hover:text-gray-700 transition-colors">
+                  Add your educational background and qualifications
+                </p>
+              </div>
+            </Link>
+            
+            {/* Add Certificates Card */}
+            <Link href="/certificates" className="group">
+              <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-yellow-300 cursor-pointer">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <svg className="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-lg font-medium text-gray-900 group-hover:text-yellow-600 transition-colors">
+                        Add Certificates
+                      </h3>
+                    </div>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-yellow-600 group-hover:translate-x-1 transition-all" />
+                </div>
+                <p className="mt-3 text-sm text-gray-500 group-hover:text-gray-700 transition-colors">
+                  Showcase your certifications and professional achievements
+                </p>
+              </div>
+            </Link>
+            
           </div>
         </div>
       </div>

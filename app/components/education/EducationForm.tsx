@@ -33,7 +33,7 @@ export default function EducationForm({
       degree: education.degree,
       description: education.description || '',
       fieldOfStudy: education.fieldOfStudy || '',
-      startDate: format(new Date(education.startDate), 'yyyy-MM-dd'),
+      startDate: education.startDate ? format(new Date(education.startDate), 'yyyy-MM-dd') : '',
       endDate: education.endDate ? format(new Date(education.endDate), 'yyyy-MM-dd') : '',
       isCurrent: education.isCurrent,
       institutionLogoUrl: education.institutionLogoUrl || '',

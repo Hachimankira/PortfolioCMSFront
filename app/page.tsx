@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      
+
       <main className="flex-grow">
         {/* Hero Section */}
         <div className="bg-white">
@@ -36,13 +36,27 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className="mt-12 relative sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-6 lg:flex lg:items-center">
+              {/* <div className="mt-12 relative sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-6 lg:flex lg:items-center">
                 <div className="relative mx-auto w-full rounded-lg shadow-lg lg:max-w-md">
                   <div className="relative block w-full bg-white rounded-lg overflow-hidden">
                     <span className="sr-only">Watch our video</span>
                     <div className="w-full h-64 bg-gray-200 flex items-center justify-center">
                       <span className="text-gray-400">Portfolio Preview Image</span>
                     </div>
+                  </div>
+                </div>
+              </div> */}
+              <div className="mt-12 relative sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-6 lg:flex lg:items-center">
+                <div className="relative mx-auto w-full rounded-lg shadow-lg lg:max-w-md">
+                  <div className="relative block w-full bg-white rounded-lg overflow-hidden">
+                    <span className="sr-only">Watch our video</span>
+                    <Image
+                      src="/hero.webp"
+                      alt="hero-section"
+                      width={400}
+                      height={256}
+                      className="w-full h-64 object-cover"
+                    />
                   </div>
                 </div>
               </div>
@@ -139,7 +153,7 @@ export default function Home() {
           </div>
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );

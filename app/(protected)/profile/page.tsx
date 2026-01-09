@@ -1,18 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 import { Profile, UpdateProfileDto } from '@/lib/types/profile.types';
 import { profileService } from '@/lib/services/profile.service';
 import ProfilePreview from '@/app/components/profile/ProfilePreview';
 import { Eye, Edit } from 'lucide-react';
-import ProfileForm from '@/app/components/profile/ProfileForm';
+import ProfileForm, { ProfileFormRef } from '@/app/components/profile/ProfileForm';
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [formData, setFormData] = useState<UpdateProfileDto | null>(null);
+  const formRef = useRef<ProfileFormRef>(null);
 
   useEffect(() => {
     fetchProfile();
@@ -35,6 +37,7 @@ export default function ProfilePage() {
       setSubmitting(true);
       const updatedProfile = await profileService.updateProfile(data);
       setProfile(updatedProfile);
+      setFormData(null); // Clear cached form data after successful update
       toast.success('Profile updated successfully');
     } catch (error: any) {
       toast.error(error?.response?.data?.title || 'Failed to update profile');
@@ -42,6 +45,25 @@ export default function ProfilePage() {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handlePreviewToggle = () => {
+    if (!showPreview && formRef.current) {
+      // Switching to preview mode - capture current form data
+      const currentFormData = formRef.current.getCurrentFormData();
+      setFormData(currentFormData);
+    }
+    setShowPreview(!showPreview);
+  };
+
+  const getPreviewData = () => {
+    if (!profile) return null;
+    
+    // Merge profile data with any form changes
+    return {
+      ...profile,
+      ...formData
+    };
   };
 
   if (loading) {
@@ -107,7 +129,7 @@ export default function ProfilePage() {
         </div>
         <div className="mt-4 sm:mt-0 flex space-x-3">
           <button
-            onClick={() => setShowPreview(!showPreview)}
+            onClick={handlePreviewToggle}
             className={`flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
               showPreview
                 ? 'bg-primary-100 text-primary-700 hover:bg-primary-200'
@@ -131,10 +153,12 @@ export default function ProfilePage() {
 
       {/* Content */}
       {showPreview ? (
-        <ProfilePreview profile={profile} />
+        <ProfilePreview profile={getPreviewData()!} />
       ) : (
         <ProfileForm
+          ref={formRef}
           profile={profile}
+          initialFormData={formData}
           onSubmit={handleUpdateProfile}
           loading={submitting}
         />

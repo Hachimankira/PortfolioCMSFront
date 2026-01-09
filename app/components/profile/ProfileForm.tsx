@@ -1,19 +1,31 @@
 import { Profile, UpdateProfileDto } from "@/lib/types/profile.types";
 import { Briefcase, Camera, FileText, Mail, MapPin, Phone, User } from "lucide-react";
-import { useState } from "react";
+import { useState, useImperativeHandle, forwardRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
+
+export interface ProfileFormRef {
+    getCurrentFormData: () => UpdateProfileDto;
+}
 
 interface ProfileFormProps {
     profile: Profile;
+    initialFormData?: UpdateProfileDto | null;
     onSubmit: (data: UpdateProfileDto) => Promise<void>;
     loading?: boolean;
 }
 
-export default function ProfileForm({ profile, onSubmit, loading = false }: ProfileFormProps) {
+const ProfileForm = forwardRef<ProfileFormRef, ProfileFormProps>(({ 
+    profile, 
+    initialFormData,
+    onSubmit, 
+    loading = false 
+}, ref) => {
     const [imageError, setImageError] = useState(false);
+    const [imageLoading, setImageLoading] = useState(false);
 
-    const { register, handleSubmit, watch, formState: { errors, isDirty } } = useForm<UpdateProfileDto>({
-        defaultValues: {
+    // Determine initial values - use initialFormData if available, otherwise use profile data
+    const getInitialValues = () => {
+        const baseValues = {
             fullName: profile.fullName || '',
             email: profile.email || '',
             phoneNumber: profile.phoneNumber || '',
@@ -21,10 +33,42 @@ export default function ProfileForm({ profile, onSubmit, loading = false }: Prof
             headline: profile.headline || '',
             summary: profile.summary || '',
             location: profile.location || '',
-        }
+        };
+
+        return initialFormData ? { ...baseValues, ...initialFormData } : baseValues;
+    };
+
+    const { register, handleSubmit, watch, formState: { errors, isDirty } } = useForm<UpdateProfileDto>({
+        defaultValues: getInitialValues()
     });
 
     const profilePictureUrl = watch('profilePictureUrl');
+
+    // Reset image states when URL changes
+    useEffect(() => {
+        setImageError(false);
+        setImageLoading(false);
+    }, [profilePictureUrl]);
+
+    // Expose method to get current form data
+    useImperativeHandle(ref, () => ({
+        getCurrentFormData: () => watch()
+    }));
+
+    const handleImageLoad = () => {
+        setImageLoading(false);
+        setImageError(false);
+    };
+
+    const handleImageError = () => {
+        setImageLoading(false);
+        setImageError(true);
+    };
+
+    const handleImageLoadStart = () => {
+        setImageLoading(true);
+        setImageError(false);
+    };
 
     const handleFormSubmit = async (data: UpdateProfileDto) => {
         const filteredData: UpdateProfileDto = {};
@@ -48,18 +92,30 @@ export default function ProfileForm({ profile, onSubmit, loading = false }: Prof
 
                 <div className="flex items-start space-x-6">
                     <div className="flex-shrink-0">
-                        {profilePictureUrl && !imageError ? (
-                            <img
-                                src={profilePictureUrl}
-                                alt="Profile"
-                                className="h-24 w-24 rounded-full object-cover border-4 border-gray-200"
-                                onError={() => setImageError(true)}
-                            />
-                        ) : (
-                            <div className="h-24 w-24 rounded-full bg-gray-200 flex items-center justify-center">
-                                <User className="h-12 w-12 text-gray-400" />
-                            </div>
-                        )}
+                        <div className="relative">
+                            {profilePictureUrl && !imageError ? (
+                                <>
+                                    {imageLoading && (
+                                        <div className="absolute inset-0 h-24 w-24 rounded-full bg-gray-200 flex items-center justify-center">
+                                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600"></div>
+                                        </div>
+                                    )}
+                                    <img
+                                        src={profilePictureUrl}
+                                        alt="Profile"
+                                        className="h-24 w-24 rounded-full object-cover border-4 border-gray-200"
+                                        onLoad={handleImageLoad}
+                                        onError={handleImageError}
+                                        onLoadStart={handleImageLoadStart}
+                                        style={{ opacity: imageLoading ? 0 : 1 }}
+                                    />
+                                </>
+                            ) : (
+                                <div className="h-24 w-24 rounded-full bg-gray-200 flex items-center justify-center">
+                                    <User className="h-12 w-12 text-gray-400" />
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     <div className="flex-1">
@@ -78,7 +134,6 @@ export default function ProfileForm({ profile, onSubmit, loading = false }: Prof
                             id="profilePictureUrl"
                             className="input-field"
                             placeholder="https://example.com/your-photo.jpg"
-                            onChange={() => setImageError(false)}
                         />
                         {errors.profilePictureUrl && <p className="form-error">{errors.profilePictureUrl.message}</p>}
                         <p className="text-sm text-gray-500 mt-1">
@@ -289,4 +344,8 @@ export default function ProfileForm({ profile, onSubmit, loading = false }: Prof
             )}
         </form>
     );
-}
+});
+
+ProfileForm.displayName = 'ProfileForm';
+
+export default ProfileForm;

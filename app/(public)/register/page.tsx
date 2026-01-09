@@ -16,6 +16,7 @@ export default function RegisterPage() {
   const { register: registerUser, loading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [serverErrors, setServerErrors] = useState<Record<string, string[]> | null>(null);
   
   const {
     register,
@@ -27,7 +28,15 @@ export default function RegisterPage() {
   const password = watch('password');
 
   const onSubmit = async (data: RegisterForm) => {
-    await registerUser(data.email, data.password, data.confirmPassword);
+    // Clear previous server errors
+    setServerErrors(null);
+    
+    const result = await registerUser(data.email, data.password, data.confirmPassword);
+    
+    // If registration failed, set server errors
+    if (!result.success && result.errors) {
+      setServerErrors(result.errors);
+    }
   };
 
   return (
@@ -46,6 +55,24 @@ export default function RegisterPage() {
         </div>
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          {/* Display server errors */}
+          {serverErrors && (
+            <div className="bg-red-50 border border-red-200 rounded-md p-4">
+              <div className="text-sm text-red-800">
+                {Object.entries(serverErrors).map(([field, fieldErrors]) => (
+                  <div key={field} className="mb-2">
+                    <strong className="font-medium">{field}:</strong>
+                    <ul className="list-disc list-inside ml-2">
+                      {fieldErrors.map((error, index) => (
+                        <li key={index}>{error}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -66,6 +93,13 @@ export default function RegisterPage() {
                 placeholder="Enter your email"
               />
               {errors.email && <p className="form-error">{errors.email.message}</p>}
+              {serverErrors?.DuplicateUserName && (
+                <div className="mt-1">
+                  {serverErrors.DuplicateUserName.map((error, index) => (
+                    <p key={index} className="form-error">{error}</p>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div>
