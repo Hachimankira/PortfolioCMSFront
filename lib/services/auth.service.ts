@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import apiClient from "../api-client";
 
 export interface LoginRequest {
@@ -24,8 +25,17 @@ export interface AuthResponse {
 
 export const authService = {
   async login(email: string, password: string): Promise<AuthResponse> {
-    const response = await apiClient.post('/login', { email, password });
-    return response.data;
+    try {
+      const response = await apiClient.post('/login', { email, password });
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        toast.error("Invalid email or password. Please try again.");
+      } else {
+        toast.error("An error occurred during login. Please try again.");
+      }
+      throw error;
+    }
   },
 
   async register(email: string, password: string, confirmPassword: string): Promise<AuthResponse> {
